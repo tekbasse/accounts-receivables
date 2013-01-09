@@ -101,8 +101,8 @@ CREATE TABLE qar_orderitems (
   serialnumber text,
   id int default nextval('qar_orderitemsid')
 );
---
---
+
+
 CREATE TABLE qar_recurring (
   id int,
   reference text,
@@ -112,9 +112,9 @@ CREATE TABLE qar_recurring (
   repeat int2,
   unit varchar(6),
   howmany int,
-  payment bool default 'f'
+  payment varchar(1) default 'f'
 );
---
+
 CREATE TABLE qar_recurringemail (
   id int,
   formname text,

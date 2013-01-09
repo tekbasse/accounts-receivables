@@ -13,6 +13,8 @@
         <summary>Accounts Receivables provides basic UI for quotes, orders, invoices and their payments, and tracks, reports related info.</summary>
         <vendor url="http://dekka.com">Dekka Corp of Oregon</vendor>
         <description format="text/plain">Accounts Receivables provides manages and tracks quotes, orders, invoices and their payments, and an API for related services to other packages.</description>
+        <license>GNU Gpl 3.0 or higher</license>
+        <license_url>http://www.gnu.org/licenses/gpl.txt</license_url>
         <maturity>0</maturity>
 
         <provides url="accounts-receivables" version="0.1d"/>
@@ -20,7 +22,7 @@
         <requires url="ref-us-states" version="0.1d"/>
         <requires url="ref-us-counties" version="0.1d"/>
         <requires url="ref-us-zipcodes" version="0.1d"/>
-        <requires url="shipping-tracking" version="0.1d"/>
+
 
         <callbacks>
         </callbacks>
