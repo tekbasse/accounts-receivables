@@ -9,23 +9,26 @@
 CREATE SEQUENCE qar_invoiceid;
 SELECT nextval ('qar_invoiceid');
 
---
+-- for invoice_status, invoice_credits see SL AR aging
+-- for invoice_summary, see SL AR reports
+-- for new_acct_payment,and new_company_info see shopping-basket orders, new customer registration, affiliate, referral_info, domain_name, plan_id,
+
 CREATE SEQUENCE qar_orderitemsid;
 SELECT nextval ('qar_orderitemsid');
 --
 CREATE TABLE qar_invoice (
-  id int DEFAULT nextval ( 'qar_invoiceid' ),
-  trans_id int,
-  parts_id int,
+  id integer DEFAULT nextval ( 'qar_invoiceid' ),
+  trans_id integer,
+  parts_id integer,
   description text,
-  qty float4,
-  allocated float4,
-  sellprice float,
-  fxsellprice float,
-  discount float4,
-  assemblyitem bool DEFAULT 'f',
+  qty numeric,
+  allocated numeric,
+  sellprice numeric,
+  fxsellprice numeric,
+  discount numeric,
+  assemblyitem varchar(1) DEFAULT 'f',
   unit varchar(5),
-  project_id int,
+  project_id integer,
   deliverydate date,
   serialnumber text
 );
@@ -34,27 +37,43 @@ CREATE TABLE qar_ar (
   id int DEFAULT nextval ( 'qal_id' ),
   invnumber text,
   transdate date DEFAULT current_date,
-  customer_id int,
-  taxincluded bool,
-  amount float,
-  netamount float,
-  paid float,
+  customer_id integer,
+  taxincluded varchar(1),
+  amount numeric,
+  netamount numeric,
+  paid numeric,
   datepaid date,
   duedate date,
-  invoice bool DEFAULT 'f',
+ -- expires when invoice must be renegotiated.
+ -- part of company_status
+  expire_date date,
+  invoice varchar(1) DEFAULT 'f',
   shippingpoint text,
-  terms int2 DEFAULT 0,
+  terms integer DEFAULT 0,
   notes text,
   curr char(3),
   ordnumber text,
-  employee_id int,
+  employee_id integer,
   till varchar(20),
   quonumber text,
   intnotes text,
   department_id int default 0,
   shipvia text,
   language_code varchar(6),
-  ponumber text
+  ponumber text,
+  status varchar(1),
+  -- aka company_status.description
+  -- 1 = paid (deprecated)
+  -- 2 = closed/expired
+  -- 3 = invoiced/past due/suspended
+  -- 4 = invoiced/active
+ --see also invoice_status_text.status_text
+  -- 1 = unpaid
+  -- 2 = paid
+  -- 3 = void
+  -- 4 = credit memo
+  -- 5 = referral credit memo
+  -- 6 = pending: server-a-thon
 );
 
 
@@ -63,18 +82,18 @@ CREATE TABLE qar_oe (
   id int default nextval('qal_id'),
   ordnumber text,
   transdate date default current_date,
-  vendor_id int,
-  customer_id int,
-  amount float8,
-  netamount float8,
+  vendor_id integer,
+  customer_id integer,
+  amount numeric,
+  netamount numeric,
   reqdate date,
-  taxincluded bool,
+  taxincluded varchar(1),
   shippingpoint text,
   notes text,
   curr char(3),
-  employee_id int,
-  closed bool default 'f',
-  quotation bool default 'f',
+  employee_id integer,
+  closed varchar(1) default 'f',
+  quotation varchar(1) default 'f',
   quonumber text,
   intnotes text,
   department_id int default 0,
@@ -88,42 +107,42 @@ CREATE TRIGGER qci_check_inventory AFTER UPDATE ON qar_oe FOR EACH ROW EXECUTE P
 
 --
 CREATE TABLE qar_orderitems (
-  trans_id int,
-  parts_id int,
+  trans_id integer,
+  parts_id integer,
   description text,
-  qty float4,
-  sellprice float8,
-  discount float4,
+  qty numeric,
+  sellprice numeric,
+  discount numeric,
   unit varchar(5),
-  project_id int,
+  project_id integer,
   reqdate date,
-  ship float4,
+  ship numeric,
   serialnumber text,
   id int default nextval('qar_orderitemsid')
 );
 
 -- part of company_dates
 CREATE TABLE qar_recurring (
-  id int,
+  id integer,
   reference text,
   startdate date,
   nextdate date,
   enddate date,
   repeat int2,
   unit varchar(6),
-  howmany int,
+  howmany integer,
   payment varchar(1) default 'f'
 );
 
 CREATE TABLE qar_recurringemail (
-  id int,
+  id integer,
   formname text,
   format text,
   message text
 );
 --
 CREATE TABLE qar_recurringprint (
-  id int,
+  id integer,
   formname text,
   format text,
   printer text
