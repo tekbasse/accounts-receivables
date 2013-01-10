@@ -14,7 +14,6 @@ SELECT nextval ('qar_invoiceid');
 -- for new_acct_payment,and new_company_info see shopping-basket orders, new customer registration, affiliate, referral_info, domain_name, plan_id,
 -- for special fund collections such as server_fund table, create separate sku(s) for easy tracking.
 
-
 CREATE SEQUENCE qar_orderitemsid;
 SELECT nextval ('qar_orderitemsid');
 --
