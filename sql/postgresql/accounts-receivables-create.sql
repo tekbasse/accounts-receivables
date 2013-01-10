@@ -102,7 +102,7 @@ CREATE TABLE qar_orderitems (
   id int default nextval('qar_orderitemsid')
 );
 
-
+-- part of company_dates
 CREATE TABLE qar_recurring (
   id int,
   reference text,
