@@ -3,7 +3,6 @@
 -- @author Benjamin Birnk
 -- @ported from sql-ledger and combined with parts from OpenACS ecommerce package
 -- @license GNU GENERAL PUBLIC LICENSE, Version 2, June 1991
--- @cvs-id
 --
 
 CREATE SEQUENCE qar_invoiceid;
@@ -31,21 +30,29 @@ CREATE TABLE qar_invoice (
   assemblyitem varchar(1) DEFAULT '0',
   unit varchar(5),
   project_id integer,
-  deliverytime timestamptz,
+  -- was deliverydate
+  delivery_time timestamptz,
   serialnumber varchar(300)
 );
+
+create index qar_invoice_id_idx on qar_invoice (id);
+create index qar_invoice_trans_id_idx on qar_invoice (trans_id);
+
 
 CREATE TABLE qar_ar (
   id integer DEFAULT nextval ( 'qal_id' ),
   invnumber varchar(300),
+  -- was transdate
   transtime timestamptz DEFAULT now(),
   customer_id integer,
   taxincluded varchar(1),
   amount numeric,
   netamount numeric,
   paid numeric,
-  timepaid timestamptz,
-  duedate timestamptz,
+  -- was datepaid date
+  paid_time timestamptz,
+  -- was duedate
+  due_time timestamptz,
  -- expires when invoice must be renegotiated.
  -- part of company_status
   expire_time timestamptz,
@@ -65,7 +72,7 @@ CREATE TABLE qar_ar (
   shipvia varchar(300),
   language_code varchar(6),
   ponumber varchar(300),
-  status varchar(1),
+  status varchar(1)
   -- aka company_status.description
   -- 1 = paid (deprecated)
   -- 2 = closed/expired
@@ -80,32 +87,46 @@ CREATE TABLE qar_ar (
   -- 6 = pending: server-a-thon
 );
 
+create index qar_ar_id_idx on qar_ar (id);
+create index qar_ar_transdate_idx on qar_ar (transtime);
+create index qar_ar_invnumber_idx on qar_ar (invnumber);
+create index qar_ar_ordnumber_idx on qar_ar (ordnumber);
+create index qar_ar_customer_id_idx on qar_ar (customer_id);
+create index qar_ar_employee_id_idx on qar_ar (employee_id);
+create index qar_ar_quonumber_idx on qar_ar (quonumber);
 
---
+
 CREATE TABLE qar_oe (
   id integer default nextval('qal_id'),
   ordnumber varchar(300),
-  transdate date default current_date,
+  -- was transdate date
+  transtime timestamptz default now(),
   vendor_id integer,
   customer_id integer,
   amount numeric,
   netamount numeric,
-  reqdate date,
+  -- was reqdate date
+  req_time timestamptz,
   taxincluded varchar(1),
-  shippingpoint text,
+  shippingpoint varchar(300),
   notes text,
   curr char(3),
   employee_id integer,
   closed varchar(1) default '0',
   quotation varchar(1) default '0',
-  quonumber text,
+  quonumber varchar(300),
   intnotes text,
   department_id integer default '0',
-  shipvia text,
+  shipvia varchar(300),
   language_code varchar(6),
-  ponumber text,
-  terms int2 DEFAULT 0
+  ponumber varchar(300),
+  terms integer DEFAULT '0'
 );
+
+create index qar_oe_id_idx on qar_oe (id);
+create index qar_oe_transdate_idx on qar_oe (transtime);
+create index qar_oe_ordnumber_idx on qar_oe (ordnumber);
+create index qar_oe_employee_id_idx on qar_oe (employee_id);
 
 -- CREATE TRIGGER qci_check_inventory AFTER UPDATE ON qar_oe FOR EACH ROW EXECUTE PROCEDURE qci_check_inventory();
 -- moving this trigger to the application level (tcl)
@@ -114,26 +135,33 @@ CREATE TABLE qar_oe (
 CREATE TABLE qar_orderitems (
   trans_id integer,
   parts_id integer,
-  description text,
+  description varchar(300),
   qty numeric,
   sellprice numeric,
   discount numeric,
   unit varchar(50),
   project_id integer,
-  reqdate date,
+  -- was reqdate date,
+  req_time timestamptz,
   ship numeric,
-  serialnumber text,
+  serialnumber varchar(300),
   id integer default nextval('qar_orderitemsid')
 );
+
+create index qar_orderitems_trans_id_idx on qar_orderitems (trans_id);
+create index qar_orderitems_id_idx on qar_orderitems (id);
 
 -- part of company_dates
 CREATE TABLE qar_recurring (
   id integer,
-  reference text,
-  startdate date,
-  nextdate date,
-  enddate date,
-  repeat int2,
+  reference varchar(300),
+  -- was startdate date
+  start_time timestamptz,
+  -- was nextdate date,
+  next_time timestamptz,
+  -- was enddate date,
+  end_time timestamptz,
+  repeat integer,
   unit varchar(6),
   howmany integer,
   payment varchar(1) default '0'
@@ -141,38 +169,22 @@ CREATE TABLE qar_recurring (
 
 CREATE TABLE qar_recurringemail (
   id integer,
-  formname text,
-  format text,
+  formname varchar(300),
+  format varchar(300),
   message text
 );
 --
 CREATE TABLE qar_recurringprint (
   id integer,
-  formname text,
-  format text,
+  formname varchar(300),
+  format varchar(300),
   printer text
 );
 
 
---
-create index qar_ar_id_key on qar_ar (id);
-create index qar_ar_transdate_key on qar_ar (transdate);
-create index qar_ar_invnumber_key on qar_ar (invnumber);
-create index qar_ar_ordnumber_key on qar_ar (ordnumber);
-create index qar_ar_customer_id_key on qar_ar (customer_id);
-create index qar_ar_employee_id_key on qar_ar (employee_id);
-create index qar_ar_quonumber_key on qar_ar (quonumber);
 
---
-create index qar_invoice_id_key on qar_invoice (id);
-create index qar_invoice_trans_id_key on qar_invoice (trans_id);
---
-create index qar_oe_id_key on qar_oe (id);
-create index qar_oe_transdate_key on qar_oe (transdate);
-create index qar_oe_ordnumber_key on qar_oe (ordnumber);
-create index qar_oe_employee_id_key on qar_oe (employee_id);
-create index qar_orderitems_trans_id_key on qar_orderitems (trans_id);
-create index qar_orderitems_id_key on qar_orderitems (id);
+
+
 --
 --CREATE FUNCTION qar_del_recurring() returns opaque as '
 --BEGIN
@@ -233,8 +245,9 @@ create index qar_orderitems_id_key on qar_orderitems (id);
 --   create view qar_ec_creditcard_id_sequence as select nextval('qar_ec_creditcard_id_seq') as nextval;
    
    create table qar_ec_creditcards (
-           creditcard_id           integer not null primary key,
-           user_id                 integer not null references users,
+           creditcard_id           integer not null,
+	   -- references users
+           user_id                 integer not null, 
            -- Some credit card gateways do not ask for this but we'll store it anyway
            creditcard_type         char(1),
            -- no spaces; always 16 digits (oops; except for AMEX, which is 15)
