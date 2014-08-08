@@ -7,21 +7,20 @@
     <initial-install-p>f</initial-install-p>
     <singleton-p>f</singleton-p>
     
-    <version name="0.1d" url="http://openacs.org/repository/download/apm/accounts-receivables-0.1d.apm">
-        <owner url="mailto:torben@dekka.com">Torben Brosten</owner>
+    <version name="0.009" url="http://openacs.org/repository/download/apm/accounts-receivables-0.009.apm">
+        <owner url="mailto:tekbasse@yahoo.com">Benjamin Brink</owner>
         <owner url="http://openacs.org">OpenACS community</owner>
         <summary>Accounts Receivables provides basic UI for quotes, orders, invoices and their payments, and tracks, reports related info.</summary>
-        <vendor url="http://dekka.com">Dekka Corp of Oregon</vendor>
         <description format="text/plain">Accounts Receivables provides manages and tracks quotes, orders, invoices and their payments, and an API for related services to other packages.</description>
         <license>GNU Gpl 3.0 or higher</license>
         <license_url>http://www.gnu.org/licenses/gpl.txt</license_url>
         <maturity>0</maturity>
 
-        <provides url="accounts-receivables" version="0.1d"/>
-        <requires url="accounts-ledger" version="0.1d"/>
-        <requires url="ref-us-states" version="0.1d"/>
-        <requires url="ref-us-counties" version="0.1d"/>
-        <requires url="ref-us-zipcodes" version="0.1d"/>
+        <provides url="accounts-receivables" version="0.001"/>
+        <requires url="accounts-ledger" version="0.001"/>
+        <requires url="ref-us-states" version="0.001"/>
+        <requires url="ref-us-counties" version="0.001"/>
+        <requires url="ref-us-zipcodes" version="0.001"/>
 
 
         <callbacks>
