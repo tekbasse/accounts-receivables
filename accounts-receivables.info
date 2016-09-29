@@ -21,12 +21,12 @@
         <requires url="ref-us-states" version="0.001"/>
         <requires url="ref-us-counties" version="0.001"/>
         <requires url="ref-us-zipcodes" version="0.001"/>
-
+        <requires url="q-control" version="0.001"/>
 
         <callbacks>
         </callbacks>
         <parameters>
-        <!-- No version parameters -->
+          <parameter datatype="string"  min_n_values="1"  max_n_values="1"  name="instanceIdOverride"  default="" description="Override the package_id for this instance. Usually leave blank.. or maybe set to subsite_id or a specific package_id number. See qs_set_instance_id for implementation details." section_name="site-admin"/>
         </parameters>
 
     </version>
