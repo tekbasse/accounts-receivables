@@ -51,3 +51,4 @@ drop sequence qar_orderitemsid;
 
 drop sequence qar_invoiceid;
 
+drop sequence qar_id;

@@ -4,6 +4,9 @@
 -- @ported from sql-ledger and combined with parts from OpenACS ecommerce package
 -- @license GNU GENERAL PUBLIC LICENSE, Version 2, June 1991
 --
+CREATE SEQUENCE qar_id;
+SELECT nextval ('qar_id');
+
 
 CREATE SEQUENCE qar_invoiceid;
 SELECT nextval ('qar_invoiceid');
@@ -40,7 +43,7 @@ create index qar_invoice_trans_id_idx on qar_invoice (trans_id);
 
 
 CREATE TABLE qar_ar (
-  id integer DEFAULT nextval ( 'qal_id' ),
+  id integer DEFAULT nextval ( 'qar_id' ),
   invnumber varchar(300),
   -- was transdate
   transtime timestamptz DEFAULT current_timestamp,
@@ -97,7 +100,7 @@ create index qar_ar_quonumber_idx on qar_ar (quonumber);
 
 
 CREATE TABLE qar_oe (
-  id integer default nextval('qal_id'),
+  id integer default nextval('qar_id'),
   ordnumber varchar(300),
   -- was transdate date
   transtime timestamptz default current_timestamp,
