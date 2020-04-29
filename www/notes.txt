@@ -1,0 +1,13 @@
+# expected partial site-map, set by buttons in accounts-contacts:
+url menu-item
+transaction  (ar transaction)
+invoice-sales (sales invoice)
+invoice-credit (credit invoice)
+invoice-pos (POS invoice)
+order-sales (sales order)
+quote-sales (Sales quotation)
+pricelist-customer (customer pricelist)
+
+# and here are some variables that might be included in a redirect or post
+contact_id
+
